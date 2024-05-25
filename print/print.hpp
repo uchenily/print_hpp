@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <ostream>
 #include <ranges>
 #include <type_traits>
 
@@ -23,8 +24,6 @@ constexpr auto name_of() -> std::string_view {
     return sv;
 }
 
-} // namespace print_detail
-
 template <typename Container>
 concept is_iterable_v = requires(Container &c) {
     std::ranges::begin(c);
@@ -41,36 +40,44 @@ concept is_mappable_v = requires(Container &c) {
 };
 
 template <typename T>
-auto print(T t) {
-    if constexpr (std::is_convertible_v<T, std::string_view>
-                  || (std::is_integral_v<T> && !std::is_same_v<T, bool>)
-                  || std::is_floating_point_v<T>) {
-        std::cout << t << '\n';
+auto print_to(std::ostream &out, T t) {
+    if constexpr (std::is_convertible_v<T, std::string_view>) {
+        out << '"' << t << '"' << '\n';
+    } else if constexpr ((std::is_integral_v<T> && !std::is_same_v<T, bool>)
+                         || std::is_floating_point_v<T>) {
+        out << t << '\n';
     } else if constexpr (std::is_same_v<T, bool>) {
-        std::cout << (t ? "true\n" : "false\n");
+        out << (t ? "true\n" : "false\n");
     } else if constexpr (is_mappable_v<T>) {
-        std::cout << '{';
+        out << '{';
         auto first = true;
         for (const auto &elem : t) {
             if (!first) {
-                std::cout << ", ";
+                out << ", ";
             }
             first = false;
-            std::cout << elem.first << ": " << elem.second;
+            out << elem.first << ": " << elem.second;
         }
-        std::cout << "}\n";
+        out << "}\n";
     } else if constexpr (is_iterable_v<T>) {
-        std::cout << '{';
+        out << '{';
         auto first = true;
         for (const auto &elem : t) {
             if (!first) {
-                std::cout << ", ";
+                out << ", ";
             }
             first = false;
-            std::cout << elem;
+            out << elem;
         }
-        std::cout << "}\n";
+        out << "}\n";
     } else {
-        std::cout << "unprintable type " << print_detail::name_of<T>() << '\n';
+        out << "unprintable type " << name_of<T>() << '\n';
     }
+}
+
+} // namespace print_detail
+
+template <typename T>
+auto print(T t) {
+    print_detail::print_to(std::cout, t);
 }
