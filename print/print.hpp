@@ -73,7 +73,7 @@ auto print_to(std::ostream &out, T t) {
         }
         out << "}";
     } else if constexpr (is_iterable_v<T>) {
-        out << '{';
+        out << '[';
         auto first = true;
         for (const auto &elem : t) {
             if (!first) {
@@ -82,7 +82,7 @@ auto print_to(std::ostream &out, T t) {
             first = false;
             print_to(out, elem);
         }
-        out << "}";
+        out << "]";
     } else if constexpr (is_variant_v<T>) {
         std::visit(
             [&out](const auto &value) {
