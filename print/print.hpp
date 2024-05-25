@@ -1,6 +1,5 @@
 #pragma once
 
-#include <array>
 #include <iostream>
 #include <type_traits>
 
@@ -27,7 +26,8 @@ constexpr auto name_of() -> std::string_view {
 
 template <typename T>
 auto print(T t) {
-    if constexpr (std::is_convertible_v<T, std::string_view>) {
+    if constexpr (std::is_convertible_v<T, std::string_view>
+                  || std::is_integral_v<T> || std::is_floating_point_v<T>) {
         std::cout << t << '\n';
     } else {
         std::cout << "unprintable type " << print_detail::name_of<T>() << '\n';
