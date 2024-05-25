@@ -4,6 +4,7 @@
 #include <ostream>
 #include <ranges>
 #include <type_traits>
+#include <variant>
 
 namespace print_detail {
 
@@ -40,6 +41,9 @@ concept is_mappable_v = requires(Container &c) {
 };
 
 template <typename T>
+concept is_variant_v = requires { std::variant_size<T>::value; };
+
+template <typename T>
 auto print_to(std::ostream &out, T t) {
     if constexpr (std::is_convertible_v<T, std::string_view>) {
         out << '"' << t << '"';
@@ -72,6 +76,12 @@ auto print_to(std::ostream &out, T t) {
             print_to(out, elem);
         }
         out << "}";
+    } else if constexpr (is_variant_v<T>) {
+        std::visit(
+            [&out](const auto &value) {
+                print_to(out, value);
+            },
+            t);
     } else {
         out << "unprintable type " << name_of<T>();
     }
