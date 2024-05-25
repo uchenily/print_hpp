@@ -2,6 +2,7 @@
 
 #include <list>
 #include <map>
+#include <optional>
 #include <string_view>
 #include <variant>
 #include <vector>
@@ -19,4 +20,7 @@ auto main() -> int {
         {"hello", "world"},
         { "work",     996},
     });
+    print(std::optional<int>{3});
+    print(std::optional<int>{std::nullopt});
+    print(std::nullopt);
 }

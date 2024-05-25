@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <optional>
 #include <ostream>
 #include <ranges>
 #include <type_traits>
@@ -44,6 +45,12 @@ template <typename T>
 concept is_variant_v = requires { std::variant_size<T>::value; };
 
 template <typename T>
+concept is_optional_v = requires(T &t) {
+    { t.has_value() } -> std::same_as<bool>;
+    { t.value() } -> std::convertible_to<T>;
+};
+
+template <typename T>
 auto print_to(std::ostream &out, T t) {
     if constexpr (std::is_convertible_v<T, std::string_view>) {
         out << '"' << t << '"';
@@ -82,6 +89,14 @@ auto print_to(std::ostream &out, T t) {
                 print_to(out, value);
             },
             t);
+    } else if constexpr (is_optional_v<T>) {
+        if (t) {
+            print_to(out, t.value());
+        } else {
+            out << "nullopt";
+        }
+    } else if constexpr (std::is_same_v<T, std::nullopt_t>) {
+        out << "nullopt";
     } else {
         out << "unprintable type " << name_of<T>();
     }
