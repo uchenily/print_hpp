@@ -50,6 +50,9 @@ concept is_optional_v = requires(T &t) {
     { t.value() } -> std::convertible_to<T>;
 };
 
+template <typename Container>
+concept is_tuple_v = requires { std::tuple_size<Container>::value; };
+
 template <typename T>
 auto print_to(std::ostream &out, T t) {
     if constexpr (std::is_convertible_v<T, std::string_view>) {
@@ -97,6 +100,22 @@ auto print_to(std::ostream &out, T t) {
         }
     } else if constexpr (std::is_same_v<T, std::nullopt_t>) {
         out << "nullopt";
+    } else if constexpr (is_tuple_v<T>) {
+        out << '(';
+        auto first = true;
+        std::apply(
+            [&out, &first](auto &&...args) {
+                (([&out, &first, &args] {
+                     if (!first) {
+                         out << ", ";
+                     }
+                     print_to(out, std::forward<decltype(args)>(args));
+                     first = false;
+                 }()),
+                 ...);
+            },
+            t);
+        out << ')';
     } else {
         out << "unprintable type " << name_of<T>();
     }

@@ -4,6 +4,7 @@
 #include <map>
 #include <optional>
 #include <string_view>
+#include <tuple>
 #include <variant>
 #include <vector>
 
@@ -23,4 +24,5 @@ auto main() -> int {
     print(std::optional<int>{3});
     print(std::optional<int>{std::nullopt});
     print(std::nullopt);
+    print(std::tuple{"red", false, 3.14});
 }
