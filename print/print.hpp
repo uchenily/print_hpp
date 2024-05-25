@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <ranges>
 #include <type_traits>
 
 namespace print_detail {
@@ -24,6 +25,12 @@ constexpr auto name_of() -> std::string_view {
 
 } // namespace print_detail
 
+template <typename Container>
+concept is_iterable_v = requires(Container &c) {
+    std::ranges::begin(c);
+    std::ranges::end(c);
+};
+
 template <typename T>
 auto print(T t) {
     if constexpr (std::is_convertible_v<T, std::string_view>
@@ -32,6 +39,17 @@ auto print(T t) {
         std::cout << t << '\n';
     } else if constexpr (std::is_same_v<T, bool>) {
         std::cout << (t ? "true\n" : "false\n");
+    } else if constexpr (is_iterable_v<T>) {
+        std::cout << '{';
+        auto first = true;
+        for (const auto &elem : t) {
+            if (!first) {
+                std::cout << ", ";
+            }
+            first = false;
+            std::cout << elem;
+        }
+        std::cout << "}\n";
     } else {
         std::cout << "unprintable type " << print_detail::name_of<T>() << '\n';
     }
