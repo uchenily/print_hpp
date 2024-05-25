@@ -21,6 +21,7 @@ BreakConstructorInitializers: BeforeComma
 # BreakTemplateDeclarations: Yes # renamed
 AlwaysBreakTemplateDeclarations: Yes
 ColumnLimit: 80
+IndentPPDirectives: BeforeHash
 IndentWidth: 4
 NamespaceIndentation: Inner
 SpaceAfterCStyleCast: true
