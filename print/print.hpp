@@ -42,12 +42,12 @@ concept is_mappable_v = requires(Container &c) {
 template <typename T>
 auto print_to(std::ostream &out, T t) {
     if constexpr (std::is_convertible_v<T, std::string_view>) {
-        out << '"' << t << '"' << '\n';
+        out << '"' << t << '"';
     } else if constexpr ((std::is_integral_v<T> && !std::is_same_v<T, bool>)
                          || std::is_floating_point_v<T>) {
-        out << t << '\n';
+        out << t;
     } else if constexpr (std::is_same_v<T, bool>) {
-        out << (t ? "true\n" : "false\n");
+        out << (t ? "true" : "false");
     } else if constexpr (is_mappable_v<T>) {
         out << '{';
         auto first = true;
@@ -56,9 +56,11 @@ auto print_to(std::ostream &out, T t) {
                 out << ", ";
             }
             first = false;
-            out << elem.first << ": " << elem.second;
+            print_to(out, elem.first);
+            out << ": ";
+            print_to(out, elem.second);
         }
-        out << "}\n";
+        out << "}";
     } else if constexpr (is_iterable_v<T>) {
         out << '{';
         auto first = true;
@@ -67,11 +69,11 @@ auto print_to(std::ostream &out, T t) {
                 out << ", ";
             }
             first = false;
-            out << elem;
+            print_to(out, elem);
         }
-        out << "}\n";
+        out << "}";
     } else {
-        out << "unprintable type " << name_of<T>() << '\n';
+        out << "unprintable type " << name_of<T>();
     }
 }
 
@@ -80,4 +82,5 @@ auto print_to(std::ostream &out, T t) {
 template <typename T>
 auto print(T t) {
     print_detail::print_to(std::cout, t);
+    std::cout << '\n';
 }
