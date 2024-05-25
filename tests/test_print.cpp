@@ -15,6 +15,10 @@ auto main() -> int {
     print(3.14);
     print(std::vector{1, 2, 3});
     print(std::list{1.0, 2.0, 3.0});
+    print(std::map<std::string, std::string>{
+        {"hello", "world"},
+        { "work",   "996"},
+    });
     // print(std::map<std::string, std::variant<std::string, int>>{
     //     {"hello", "world"},
     //     { "work",     996},

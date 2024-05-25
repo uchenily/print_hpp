@@ -31,6 +31,15 @@ concept is_iterable_v = requires(Container &c) {
     std::ranges::end(c);
 };
 
+template <typename Container>
+concept is_mappable_v = requires(Container &c) {
+    typename Container::key_type;
+    typename Container::mapped_type;
+    {
+        c[std::declval<const typename Container::key_type &>()]
+    } -> std::same_as<typename Container::mapped_type &>;
+};
+
 template <typename T>
 auto print(T t) {
     if constexpr (std::is_convertible_v<T, std::string_view>
@@ -39,6 +48,17 @@ auto print(T t) {
         std::cout << t << '\n';
     } else if constexpr (std::is_same_v<T, bool>) {
         std::cout << (t ? "true\n" : "false\n");
+    } else if constexpr (is_mappable_v<T>) {
+        std::cout << '{';
+        auto first = true;
+        for (const auto &elem : t) {
+            if (!first) {
+                std::cout << ", ";
+            }
+            first = false;
+            std::cout << elem.first << ": " << elem.second;
+        }
+        std::cout << "}\n";
     } else if constexpr (is_iterable_v<T>) {
         std::cout << '{';
         auto first = true;
