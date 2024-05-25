@@ -10,6 +10,7 @@ auto main() -> int {
     print("hello");
     print(std::string{"hello"});
     print(std::string_view{"hello"});
+    print(true);
     print(3);
     print(3.14);
     print(std::vector{1, 2, 3});
