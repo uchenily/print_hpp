@@ -1,5 +1,7 @@
+#include "debug.hpp"
 #include "print.hpp"
 
+#include <format>
 #include <list>
 #include <map>
 #include <optional>
@@ -27,6 +29,30 @@ public:
 };
 } // namespace print_custom
 
+template <typename T>
+struct std::formatter<std::vector<T>> {
+    constexpr auto parse(std::format_parse_context &ctx) {
+        return ctx.begin();
+    }
+
+    auto format(const auto &vector, std::format_context &ctx) const {
+        std::ostringstream oss;
+
+        bool first = true;
+        for (const auto &item : vector) {
+            if (first) {
+                first = false;
+            } else {
+                oss << ", ";
+            }
+            oss << std::format("{}", item);
+        }
+        return std::format_to(ctx.out(), "[{}]", oss.str());
+    }
+};
+
+using namespace print_hpp;
+
 auto main() -> int {
     print("hello");
     print(std::string{"hello"});
@@ -45,4 +71,11 @@ auto main() -> int {
     print(std::nullopt);
     print(std::tuple{"red", false, 3.14});
     print(Person{.name = "zhangsan", .age = 18});
+
+    // 需要定义 std::formatter<T>
+    LOG_INFO("{}", std::vector{"R", "G", "B", "Y"});
+
+    // 自定义类型需要定义 print_custom::printer<T>
+    LOG_INFO("{}", pretty(std::vector{"R", "G", "B", "Y"}));
+    LOG_INFO("{}", pretty(Person{.name = "wangmazi", .age = 36}));
 }

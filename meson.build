@@ -1,4 +1,4 @@
-project('print', 'cpp',
+project('print_hpp', 'cpp',
   version: '0.0.1',
   default_options: [
     'buildtype=debug',

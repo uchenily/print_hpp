@@ -8,7 +8,7 @@
 #include <span>
 #include <string_view>
 
-namespace print::log {
+namespace print_hpp::log {
 
 enum class LogLevel {
     TRACE,
@@ -248,4 +248,4 @@ namespace detail {
 } // namespace detail
 
 static inline auto console = detail::ConsoleLogger();
-} // namespace print::log
+} // namespace print_hpp::log

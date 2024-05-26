@@ -4,6 +4,7 @@
 #include <optional>
 #include <ostream>
 #include <ranges>
+#include <sstream>
 #include <type_traits>
 #include <variant>
 
@@ -149,8 +150,17 @@ auto print_custom::print_to(std::ostream &out, T &&t) {
     print_detail::print_to(out, std::forward<T>(t));
 }
 
+namespace print_hpp {
 template <typename T>
 auto print(T &&t) {
     print_detail::print_to(std::cout, std::forward<T>(t));
     std::cout << '\n';
 }
+
+template <typename T>
+auto pretty(T &&t) {
+    std::ostringstream oss; // 千万别用 `std::ostrstream` !
+    print_detail::print_to(oss, std::forward<T>(t));
+    return oss.str();
+}
+} // namespace print_hpp
