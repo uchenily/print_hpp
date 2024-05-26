@@ -9,10 +9,10 @@ project('print_hpp', 'cpp',
 
 compile_args = []
 
-includes = include_directories('print')
+includes = include_directories('print_hpp')
 
 dependencies = []
 
 subdir('tests')
 
-install_subdir('print', install_dir: 'include')
+install_headers('print_hpp/print.hpp', install_dir: 'include')
