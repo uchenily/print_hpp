@@ -13,7 +13,7 @@ struct Person {
     int         age;
 };
 
-namespace print_detail {
+namespace print_custom {
 template <>
 class printer<Person> {
 public:
@@ -25,7 +25,7 @@ public:
         out << '}';
     }
 };
-} // namespace print_detail
+} // namespace print_custom
 
 auto main() -> int {
     print("hello");

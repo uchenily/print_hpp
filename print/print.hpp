@@ -7,14 +7,19 @@
 #include <type_traits>
 #include <variant>
 
-namespace print_detail {
-
+namespace print_custom {
 template <typename T>
 struct printer {
     printer() = delete;
     printer(const printer &) = delete;
     auto operator=(const printer &) = delete;
 };
+
+template <typename T>
+inline auto print_to(std::ostream &out, T t);
+} // namespace print_custom
+
+namespace print_detail {
 
 template <typename T>
 constexpr auto name_of() -> std::string_view {
@@ -61,10 +66,11 @@ template <typename Container>
 concept is_tuple_v = requires { std::tuple_size<Container>::value; };
 
 template <typename T>
-concept has_printer_print_v
-    = requires(printer<T> &printer, const T &t, std::ostream &out) {
-          { printer.print(t, out) };
-      };
+concept has_printer_print_v = requires(print_custom::printer<T> &printer,
+                                       const T                  &t,
+                                       std::ostream             &out) {
+    { printer.print(t, out) };
+};
 
 template <typename T>
 auto print_to(std::ostream &out, T t) {
@@ -130,13 +136,18 @@ auto print_to(std::ostream &out, T t) {
             t);
         out << ')';
     } else if constexpr (has_printer_print_v<T>) {
-        printer<T>().print(t, out);
+        print_custom::printer<T>().print(t, out);
     } else {
         out << "unprintable type " << name_of<T>();
     }
 }
 
 } // namespace print_detail
+
+template <typename T>
+auto print_custom::print_to(std::ostream &out, T t) {
+    print_detail::print_to(out, t);
+}
 
 template <typename T>
 auto print(T t) {
