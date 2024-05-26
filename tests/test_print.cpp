@@ -8,6 +8,25 @@
 #include <variant>
 #include <vector>
 
+struct Person {
+    std::string name;
+    int         age;
+};
+
+namespace print_detail {
+template <>
+class printer<Person> {
+public:
+    auto print(const Person &person, std::ostream &out) {
+        out << '{';
+        print_to(out, person.name);
+        out << ", ";
+        print_to(out, person.age);
+        out << '}';
+    }
+};
+} // namespace print_detail
+
 auto main() -> int {
     print("hello");
     print(std::string{"hello"});
@@ -25,4 +44,5 @@ auto main() -> int {
     print(std::optional<int>{std::nullopt});
     print(std::nullopt);
     print(std::tuple{"red", false, 3.14});
+    print(Person{.name = "zhangsan", .age = 18});
 }

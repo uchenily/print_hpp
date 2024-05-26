@@ -10,6 +10,13 @@
 namespace print_detail {
 
 template <typename T>
+struct printer {
+    printer() = delete;
+    printer(const printer &) = delete;
+    auto operator=(const printer &) = delete;
+};
+
+template <typename T>
 constexpr auto name_of() -> std::string_view {
     std::string_view sv;
 #if __clang__
@@ -52,6 +59,12 @@ concept is_optional_v = requires(T &t) {
 
 template <typename Container>
 concept is_tuple_v = requires { std::tuple_size<Container>::value; };
+
+template <typename T>
+concept has_printer_print_v
+    = requires(printer<T> &printer, const T &t, std::ostream &out) {
+          { printer.print(t, out) };
+      };
 
 template <typename T>
 auto print_to(std::ostream &out, T t) {
@@ -116,6 +129,8 @@ auto print_to(std::ostream &out, T t) {
             },
             t);
         out << ')';
+    } else if constexpr (has_printer_print_v<T>) {
+        printer<T>().print(t, out);
     } else {
         out << "unprintable type " << name_of<T>();
     }
