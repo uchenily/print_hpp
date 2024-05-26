@@ -16,7 +16,7 @@ struct printer {
 };
 
 template <typename T>
-inline auto print_to(std::ostream &out, T t);
+inline auto print_to(std::ostream &out, T &&t);
 } // namespace print_custom
 
 namespace print_detail {
@@ -73,7 +73,7 @@ concept has_printer_print_v = requires(print_custom::printer<T> &printer,
 };
 
 template <typename T>
-auto print_to(std::ostream &out, T t) {
+auto print_to(std::ostream &out, const T &t) {
     if constexpr (std::is_convertible_v<T, std::string_view>) {
         out << '"' << t << '"';
     } else if constexpr ((std::is_integral_v<T> && !std::is_same_v<T, bool>)
@@ -145,12 +145,12 @@ auto print_to(std::ostream &out, T t) {
 } // namespace print_detail
 
 template <typename T>
-auto print_custom::print_to(std::ostream &out, T t) {
-    print_detail::print_to(out, t);
+auto print_custom::print_to(std::ostream &out, T &&t) {
+    print_detail::print_to(out, std::forward<T>(t));
 }
 
 template <typename T>
-auto print(T t) {
-    print_detail::print_to(std::cout, t);
+auto print(T &&t) {
+    print_detail::print_to(std::cout, std::forward<T>(t));
     std::cout << '\n';
 }
