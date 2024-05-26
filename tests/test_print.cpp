@@ -4,6 +4,7 @@
 #include <format>
 #include <list>
 #include <map>
+#include <numbers>
 #include <optional>
 #include <string_view>
 #include <tuple>
@@ -80,4 +81,6 @@ auto main() -> int {
              pretty(std::vector{"R", "G", "B", "Y"}));
     LOG_INFO("print_custom::printer<T>: {}",
              pretty(Person{.name = "wangmazi", .age = 36}));
+
+    print("hello", 'a', std::numbers::pi);
 }
