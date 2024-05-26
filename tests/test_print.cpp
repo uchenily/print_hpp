@@ -73,9 +73,11 @@ auto main() -> int {
     print(Person{.name = "zhangsan", .age = 18});
 
     // 需要定义 std::formatter<T>
-    LOG_INFO("{}", std::vector{"R", "G", "B", "Y"});
+    LOG_INFO("std::formatter<T>: {}", std::vector{"R", "G", "B", "Y"});
 
     // 自定义类型需要定义 print_custom::printer<T>
-    LOG_INFO("{}", pretty(std::vector{"R", "G", "B", "Y"}));
-    LOG_INFO("{}", pretty(Person{.name = "wangmazi", .age = 36}));
+    LOG_INFO("print_custom::printer<T>: {}",
+             pretty(std::vector{"R", "G", "B", "Y"}));
+    LOG_INFO("print_custom::printer<T>: {}",
+             pretty(Person{.name = "wangmazi", .age = 36}));
 }
