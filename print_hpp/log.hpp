@@ -98,6 +98,15 @@ namespace detail {
         }
     }
 
+    template <LogLevel Level>
+    auto function_name(std::source_location loc) noexcept -> std::string {
+        if constexpr (Level <= LogLevel::DEBUG) {
+            return std::format("|{}|", loc.function_name());
+        } else {
+            return {};
+        }
+    }
+
     constexpr auto source_color() noexcept -> std::string_view {
         return "\033[90m";
     }
@@ -228,7 +237,7 @@ namespace detail {
             auto source_location = fwsl.source_location();
             auto message = std::vformat(fmt, std::make_format_args(args...));
             auto now = std::chrono::system_clock::now();
-            std::clog << std::format("{} |{}{:<5}{}| {}{}:{}{} {}\n",
+            std::clog << std::format("{} |{}{:<5}{}| {}{}:{}{}{} {}\n",
                                      get_timestamp(now),
                                      to_color(Level, style_),
                                      to_string(Level),
@@ -236,6 +245,7 @@ namespace detail {
                                      source_color(),
                                      source_location.file_name(),
                                      source_location.line(),
+                                     function_name<Level>(source_location),
                                      reset_color(),
                                      message);
         }
