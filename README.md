@@ -26,10 +26,8 @@ print everything!
     print(Person{.name = "zhangsan", .age = 18});
 
     // you should define print_custom::printer<T>
-    LOG_INFO("print_custom::printer<T>: {}",
-             pretty(std::vector{"R", "G", "B", "Y"}));
-    LOG_INFO("print_custom::printer<T>: {}",
-             pretty(Person{.name = "wangmazi", .age = 36}));
+    LOG_INFO("{}", P(std::vector{"R", "G", "B", "Y"}));
+    LOG_INFO("{}", P(Person{.name = "wangmazi", .age = 36}));
 ```
 
 The output will look like this:
@@ -49,6 +47,6 @@ nullopt
 nullopt
 ("red", false, 3.14)
 {"zhangsan", 18}
-2024-05-26 13:00:00.000 |INFO | ../tests/test_print.cpp:79 print_custom::printer<T>: ["R", "G", "B", "Y"]
-2024-05-26 13:00:00.000 |INFO | ../tests/test_print.cpp:80 print_custom::printer<T>: {"wangmazi", 36}
+2024-05-26 13:00:00.000 |INFO | ../tests/test_print.cpp:79 ["R", "G", "B", "Y"]
+2024-05-26 13:00:00.000 |INFO | ../tests/test_print.cpp:80 {"wangmazi", 36}
 ```

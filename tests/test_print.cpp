@@ -78,9 +78,9 @@ auto main() -> int {
 
     // 自定义类型需要定义 print_custom::printer<T>
     LOG_INFO("print_custom::printer<T>: {}",
-             pretty(std::vector{"R", "G", "B", "Y"}));
+             P(std::vector{"R", "G", "B", "Y"}));
     LOG_INFO("print_custom::printer<T>: {}",
-             pretty(Person{.name = "wangmazi", .age = 36}));
+             P(Person{.name = "wangmazi", .age = 36}));
 
     print("hello", 'a', std::numbers::pi);
 }

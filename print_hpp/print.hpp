@@ -166,8 +166,9 @@ void print(T &&t, Ts &&...ts) {
     std::cout << '\n';
 }
 
+// pretty print
 template <typename T>
-auto pretty(T &&t) {
+auto P(T &&t) {
     std::ostringstream oss; // 千万别用 `std::ostrstream` !
     print_detail::print_to(oss, std::forward<T>(t));
     return oss.str();
