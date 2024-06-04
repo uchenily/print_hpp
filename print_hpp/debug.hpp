@@ -4,6 +4,8 @@
 
 inline auto &debug_logger = print_hpp::log::console;
 
+#define PRINT_FMT(...) debug_logger.printf(__VA_ARGS__)
+
 #if !defined(NDEBUG)
 
     #define SET_LOG_LEVEL(level) debug_logger.set_level(level)

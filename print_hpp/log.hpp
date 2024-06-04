@@ -219,6 +219,12 @@ namespace detail {
             log<LogLevel::FATAL>(fwsl, std::forward<Args>(args)...);
         }
 
+        template <typename Fmt, typename... Args>
+            requires std::constructible_from<std::string_view, Fmt>
+        auto printf(Fmt fmt, Args... args) {
+            std::clog << std::vformat(fmt, std::make_format_args(args...));
+        }
+
         auto set_level(LogLevel level) {
             level_ = level;
         }
