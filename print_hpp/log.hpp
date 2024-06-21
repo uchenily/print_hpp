@@ -222,7 +222,14 @@ namespace detail {
         template <typename Fmt, typename... Args>
             requires std::constructible_from<std::string_view, Fmt>
         auto printf(Fmt fmt, Args... args) {
-            std::clog << std::vformat(fmt, std::make_format_args(args...));
+            std::cout << std::vformat(fmt, std::make_format_args(args...));
+        }
+
+        template <typename Fmt, typename... Args>
+            requires std::constructible_from<std::string_view, Fmt>
+        auto printfln(Fmt fmt, Args... args) {
+            std::cout << std::vformat(fmt, std::make_format_args(args...))
+                      << '\n';
         }
 
         auto set_level(LogLevel level) {
