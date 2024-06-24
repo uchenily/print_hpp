@@ -19,6 +19,9 @@ inline auto &debug_logger = print_hpp::log::console;
     #define LOG_ERROR(...) debug_logger.error(__VA_ARGS__)
     #define LOG_FATAL(...) debug_logger.fatal(__VA_ARGS__)
 
+    #define LOG(level) LOG_##level
+    #define LOG_IF(level, condition) (!(condition)) ? (void) (0) : LOG(level)
+
 #else
 
     #define SET_LOG_LEVEL(level)
@@ -29,6 +32,9 @@ inline auto &debug_logger = print_hpp::log::console;
     #define LOG_WARN(...)
     #define LOG_ERROR(...)
     #define LOG_FATAL(...)
+
+    #define LOG(level)
+    #define LOG_IF(level, condition)
 
 #endif
 
