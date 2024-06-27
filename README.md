@@ -4,7 +4,7 @@ print everything!
 
 `print_hpp` is a header only library for modern cpp.
 
-## Usage
+## Basic Usage
 
 ```cpp
     print("hello");
@@ -23,9 +23,7 @@ print everything!
     print(std::optional<int>{std::nullopt});
     print(std::nullopt);
     print(std::tuple{"red", false, 3.14});
-    print(Person{.name = "zhangsan", .age = 18});
 
-    // you should define print_custom::printer<T>
     LOG_INFO("{}", P(std::vector{"R", "G", "B", "Y"}));
     LOG_INFO("{}", P(Person{.name = "wangmazi", .age = 36}));
 ```
@@ -49,4 +47,19 @@ nullopt
 {"zhangsan", 18}
 2024-05-26 13:00:00.000 |INFO | ../tests/test_print.cpp:79 ["R", "G", "B", "Y"]
 2024-05-26 13:00:00.000 |INFO | ../tests/test_print.cpp:80 {"wangmazi", 36}
+```
+
+## Print Struct
+
+```cpp
+    struct Person {
+        std::string name;
+        int         age;
+    };
+
+    print(Person{.name = "zhangsan", .age = 18});
+```
+
+```
+{"zhangsan", 18}
 ```
