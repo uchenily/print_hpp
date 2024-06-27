@@ -136,6 +136,10 @@ auto print_to(std::ostream &out, const T &t) {
             },
             t);
         out << ')';
+    } else if constexpr (std::is_class_v<T>) {
+        out << '{';
+        // TODO(x): 打印结构体的所有字段
+        out << '}';
     } else if constexpr (has_printer_print_v<T>) {
         print_custom::printer<T>().print(t, out);
     } else {

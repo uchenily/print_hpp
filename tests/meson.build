@@ -1,6 +1,7 @@
 all_tests_sources = [
   'test_debug.cpp',
   'test_print.cpp',
+  'print_struct.cpp',
 ]
 
 foreach source: all_tests_sources
