@@ -6,7 +6,10 @@
 #include <ranges>
 #include <sstream>
 #include <type_traits>
+#include <utility>
 #include <variant>
+
+#include "aggregate_arity.hpp"
 
 namespace print_custom {
 template <typename T>
@@ -74,6 +77,20 @@ concept has_printer_print_v = requires(print_custom::printer<T> &printer,
 };
 
 template <typename T>
+auto print_to(std::ostream &out, const T &t);
+
+template <typename AggregateType, std::size_t... Indexs>
+auto struct_printer(std::ostream        &out,
+                    const AggregateType &t,
+                    std::index_sequence<Indexs...> /*unused*/) {
+    out << '{';
+    // NOTE: 打印结构体的所有字段
+    ((out << (Indexs == 0 ? "" : ", "), print_to(out, reflect::get<Indexs>(t))),
+     ...);
+    out << '}';
+}
+
+template <typename T>
 auto print_to(std::ostream &out, const T &t) {
     if constexpr (std::is_convertible_v<T, std::string_view>) {
         out << '"' << t << '"';
@@ -137,9 +154,8 @@ auto print_to(std::ostream &out, const T &t) {
             t);
         out << ')';
     } else if constexpr (std::is_class_v<T>) {
-        out << '{';
-        // TODO(x): 打印结构体的所有字段
-        out << '}';
+        constexpr auto N = reflect::num_fields<T>();
+        struct_printer(out, t, std::make_index_sequence<N>{});
     } else if constexpr (has_printer_print_v<T>) {
         print_custom::printer<T>().print(t, out);
     } else {
