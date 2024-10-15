@@ -1,4 +1,5 @@
 all_tests_sources = [
+  'test_reflect.cpp',
   'test_debug.cpp',
   'test_print.cpp',
   'print_struct.cpp',
